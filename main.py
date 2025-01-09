@@ -82,7 +82,7 @@ def criar_clientes(cliente: ClienteBase):
         session.add(db_cliente)
         session.commit()
         session.refresh(db_cliente)
-        return cliente
+        return db_cliente
 
 @app.get("/clientes/{cliente_id}")
 def obter_cliente(cliente_id: int):
@@ -103,4 +103,63 @@ def atualizar_dados_do_cliente(cliente_id: int ,cliente: ClienteBase):
         session.commit()
         session.refresh(pessoa)
         return pessoa
+@app.post("/encomendas")
+def criar_encomenda(encomenda: EncomendaBase, cliente: ClienteBase):
+    with Session(engine) as session:
+        id_cliente = session.exec(select(Cliente.id).where(Cliente.nome == cliente.nome, Cliente.telefone == cliente.telefone)).first()
+        if not id_cliente:
+            novo_cliente = criar_clientes(cliente)
+            encomenda.id_cliente = novo_cliente.id
+        else:
+            encomenda.id_cliente = id_cliente
 
+        db_encomenda = Encomenda.model_validate(encomenda)
+        session.add(db_encomenda)
+        session.commit()
+        session.refresh(db_encomenda)
+        return db_encomenda
+
+        
+@app.get("/encomendas")
+def obter_encomendas():
+    with Session(engine) as session:
+        encomendas = session.exec(select(Encomenda)).all()
+        return encomendas
+    
+@app.get("/encomendas/{encomenda_id}")
+def obter_encomenda(encomenda_id: int):
+    with Session(engine) as session:
+        encomenda = session.exec(select(Encomenda).where(Encomenda.id == encomenda_id)).first()
+        if not encomenda:
+            raise HTTPException(status_code=404, detail= "Not found")
+        return encomenda
+@app.delete("/encomendas/delete/{encomenda_id}")
+def excluir_encomenda(encomenda_id: int):
+    with Session(engine) as session:
+        encomenda = session.exec(select(Encomenda).where(Encomenda.id == encomenda_id)).first()
+        encomenda_copia = encomenda
+        if not encomenda:
+            raise HTTPException(status_code=404, detail= "Not found")
+        session.delete(encomenda)
+        session.commit()
+        return {"dado excluido com sucesso": encomenda}
+    
+@app.put("/encomendas/{encomenda_id}")
+def atualizar_encomenda(encomenda: EncomendaBase, encomenda_id:int):
+    with Session(engine) as session:
+        encomenda_existente = session.exec(select(Encomenda).where(Encomenda.id == encomenda_id)).first()
+        if not encomenda_existente:
+            raise HTTPException(status_code=404, detail="Not found")
+        
+        encomenda_existente.id_cliente = encomenda.id_cliente
+        encomenda_existente.produto = encomenda.produto
+        encomenda_existente.data_entrega = encomenda.data_entrega
+        encomenda_existente.data_encomenda = encomenda.data_encomenda
+        encomenda_existente.status = encomenda.status
+        encomenda_existente.preco = encomenda.preco
+
+        session.add(encomenda_existente)
+        session.commit()
+        session.refresh(encomenda_existente)
+        
+        return encomenda_existente

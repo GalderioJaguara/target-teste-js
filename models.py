@@ -1,4 +1,5 @@
 from sqlmodel import SQLModel, Field, Session, create_engine, select
+from datetime import datetime
 
 class UsuarioBase(SQLModel):
     id: int = Field(default=None, index=True, primary_key=True)
@@ -19,7 +20,16 @@ class ClienteBase(SQLModel):
 
 
 class Cliente(ClienteBase, table=True):
-     id: int = Field(default=None, index=True, primary_key=True)
-     
+    id: int = Field(default=None, index=True, primary_key=True)
 
+class EncomendaBase(SQLModel):
+    id_cliente: int = Field(default=None, foreign_key="cliente.id")
+    produto: str
+    preco: float
+    data_encomenda: datetime
+    data_entrega: datetime
+    status: str
+
+class Encomenda(EncomendaBase, table=True):
+    id: int = Field(default=None, index=True, primary_key=True)
 
