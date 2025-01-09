@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/source/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <aside>
+        <div>
+            <ul>
+                <li><a href="#"><i class="bi bi-box-arrow-right">Logout</i></a></li>
+                <li><a href="#"><i class="bi bi-box-arrow-left"></i>Login</a></li>
+            </ul>
+        </div>
+    </aside>
+    <div>
+        <form action="/register">
+            <label for="usuario">Nome de usuario</label>
+            <input type="text" name="usuario" id="usuario">
+            <label for="email">Endereço de Email</label>
+            <input type="email" name="email" id="email">
+            <label for="senha">Senha</label>
+            <input type="password" name="senha" id="senha">
+            <label for="senha-confirmar">Confirme a senha</label>
+            <input type="password" name="senha-confirmar" id="senha-confirmar">
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
+</body>
+</html>
